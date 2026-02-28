@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Price Management{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Price Management</h2>
+</div>
+
+<div class="row">
+    {% for price in prices %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">{{ price.get_category_display }}</h5>
+            </div>
+            <div class="card-body text-center">
+                <h2 class="mb-3">₦{{ price.price|floatformat:2 }}</h2>
+                <p class="text-muted small">Last updated: {{ price.date_updated|date:"M d, Y H:i" }}</p>
+                <a href="{% url 'update_price' price.pk %}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Update Price
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-warning">
+            No prices set. Please run the setup command.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

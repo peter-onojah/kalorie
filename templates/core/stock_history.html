@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Stock Addition History{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Stock Addition History</h2>
+    <a href="{% url 'stock_list' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Stock
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Quantity Added</th>
+                        <th>Recorded By</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                    <tr>
+                        <td>{{ record.date_recorded|date:"M d, Y H:i" }}</td>
+                        <td>
+                            {% if record.category == 'SMALL' %}
+                                <span class="badge bg-info">Small Eggs</span>
+                            {% elif record.category == 'MEDIUM' %}
+                                <span class="badge bg-primary">Medium Eggs</span>
+                            {% else %}
+                                <span class="badge bg-success">Large Eggs</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-success fw-bold">+{{ record.quantity_added }}</td>
+                        <td>{{ record.recorded_by.username|default:"Unknown" }}</td>
+                        <td>{{ record.notes|default:"-"|truncatechars:50 }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No stock addition records found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

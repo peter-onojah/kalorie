@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Audit Log{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Audit Log</h2>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>Model</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{ log.timestamp|date:"M d, Y H:i:s" }}</td>
+                        <td>{{ log.user.username|default:"System" }}</td>
+                        <td>
+                            {% if log.action == 'CREATE' %}
+                                <span class="badge bg-success">CREATE</span>
+                            {% elif log.action == 'UPDATE' %}
+                                <span class="badge bg-warning">UPDATE</span>
+                            {% elif log.action == 'DELETE' %}
+                                <span class="badge bg-danger">DELETE</span>
+                            {% elif log.action == 'LOGIN' %}
+                                <span class="badge bg-info">LOGIN</span>
+                            {% elif log.action == 'LOGOUT' %}
+                                <span class="badge bg-secondary">LOGOUT</span>
+                            {% else %}
+                                <span class="badge bg-dark">{{ log.action }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ log.model_name }}</td>
+                        <td><small class="text-muted">{{ log.details|truncatechars:100 }}</small></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No audit logs found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
